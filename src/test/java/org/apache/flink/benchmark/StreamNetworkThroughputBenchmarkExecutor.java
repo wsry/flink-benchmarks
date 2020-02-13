@@ -73,17 +73,18 @@ public class StreamNetworkThroughputBenchmarkExecutor extends BenchmarkBase {
 		public String channelsFlushTimeout = "100,100ms";
 
 		//Do not spam continuous benchmarking with number of writers parameter.
-		//@Param({"1", "4"})
-		public int writers = 4;
+		@Param({"1", "4"})
+		public String writers = "4";
 
 		@Setup
 		public void setUp() throws Exception {
 			int channels = parseChannels(channelsFlushTimeout);
 			int flushTimeout = parseFlushTimeout(channelsFlushTimeout);
 			boolean useSSL = parseEnableSSL(channelsFlushTimeout);
+			int numWriters = parseWriters(writers);
 
 			setUp(
-					writers,
+					numWriters,
 					channels,
 					flushTimeout,
 					false,
@@ -113,6 +114,10 @@ public class StreamNetworkThroughputBenchmarkExecutor extends BenchmarkBase {
 			String[] parameters = channelsFlushTimeout.split(",");
 			checkArgument(parameters.length >= 1);
 			return Integer.parseInt(parameters[0]);
+		}
+
+		private static int parseWriters(String writers) {
+			return Integer.parseInt(writers);
 		}
 
 		@TearDown
